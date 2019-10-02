@@ -1,0 +1,119 @@
+{% extends "table.html" %}
+{% load staticfiles %}
+{% block title %}MANAGE STORE{% endblock %}
+{% block cssfile %}
+<link rel="stylesheet" type="text/css" href="{% static 'menuserve/css/manage_store.css' %}">
+{% endblock cssfile %}
+{% block barContent %}
+<li class="nav-item">
+    <a class="nav-link" href="#">Order</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" href="#">Menu</a>
+</li>
+<li class="nav-item active">
+    <a class="nav-link" href="#">Store<span class="sr-only">(current)</span></a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" href="#">Manager</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" href="#">Employee</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" href="#">Log Out</a>
+</li>
+{% endblock barContent %}
+{% block tabletitle%}Store Management{% endblock tabletitle%}
+{% block btngroup %}
+<div class="btn-group col-md-2" role="group" aria-label="Basic example">
+    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#addModal">Add</button>
+    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#editModal">Edit</button>
+    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#deleteModal">Delete</button>
+</div>
+{% endblock %}
+{% block tablehead %}
+<th>#</th>
+<th>Store Name</th>
+<th>Address</th>
+<th>Managers</th>
+<th>Employees</th>
+{% endblock tablehead %}
+{% block tablebody %}
+{% for store in stores %}
+<tr>
+    <td>{{ store.id }}</td>
+    <td>{{ store.name }}</td>
+    <td>{{ store.address }}</td>
+    <td>
+        {% for manager in store.manager.all %}
+        <span>{{ manager.id }}</span>
+        {% endfor %}
+    </td>
+    <td>
+        {% for employee in store.employee.all %}
+        <span>{{ employee.id }}</span>
+        {% endfor %}
+    </td>
+</tr>
+{% endfor %}
+{% endblock %}
+{% block modalId %}addModal{% endblock %}
+{% block modalTitle%}Add New Store{% endblock modalTitle %}
+{% block modalBody%}
+<div class="form-group">
+    <label for="addName">Store Name</label>
+    <input type="text" class="form-control" name="addName" id="addName" placeholder="Store1">
+</div>
+<div class="form-group">
+    <label for="addAddress">Address</label>
+    <input type="text" class="form-control" name="addAddress" id="addAddress" placeholder="street1">
+</div>
+<div class="form-group">
+    <label for="addManager">Manager Id</label>
+    <input type="text" class="form-control" name="addManager" id="addManager" placeholder="1,2,3">
+</div>
+<div class="form-group">
+    <label for="addEmployee">Employee Id</label>
+    <input type="text" class="form-control" name="addEmployee" id="addEmployee" placeholder="2,3,4">
+</div>
+{% endblock modalBody %}
+{% block modalbtn %}
+<button type="submit" class="btn btn-primary">Add</button>
+{% endblock modalbtn %}
+{% block modalId2 %}editModal{% endblock %}
+{% block modalTitle2%}Edit Store{% endblock %}
+{% block modalBody2%}
+<div class="form-group">
+    <label for="editId">Store ID</label>
+    <input type="text" class="form-control" name="editId" id="editId" placeholder="1">
+</div>
+<div class="form-group">
+    <label for="editName">Store Name</label>
+    <input type="text" class="form-control" name="editName" id="editName" placeholder="Store1">
+</div>
+<div class="form-group">
+    <label for="editAddress">Address</label>
+    <input type="text" class="form-control" name="editAddress" id="editAddress" placeholder="street1">
+</div>
+<div class="form-group">
+    <label for="editManager">Manager Id</label>
+    <input type="text" class="form-control" name="editManager" id="editManager" placeholder="1,2,3">
+</div>
+<div class="form-group">
+    <label for="editEmployee">Employee Id</label>
+    <input type="text" class="form-control" name="editEmployee" id="editEmployee" placeholder="2,3,4">
+</div>
+{% endblock %}
+{% block modalbtn2 %}
+<button type="submit" class="btn btn-primary">Edit</button>
+{% endblock %}
+{% block modalId3 %}deleteModal{% endblock %}
+{% block modalTitle3%}Delete Store{% endblock %}
+{% block modalBody3%}
+<h5>Please input ID to delete Store</h5>
+<input type="text" class="form-control" name="deleteId" id="deleteId" placeholder="Store ID">
+{% endblock %}
+{% block modalbtn3 %}
+<button type="submit" class="btn btn-primary">Delete</button>
+{% endblock %}

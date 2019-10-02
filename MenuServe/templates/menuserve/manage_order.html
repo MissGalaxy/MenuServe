@@ -1,0 +1,66 @@
+{% extends "table.html" %}
+{% load staticfiles %}
+{% block title %}MANAGE ORDER{% endblock %}
+{% block cssfile %}
+<link rel="stylesheet" type="text/css" href="{% static 'menuserve/css/manage_order.css' %}">
+{% endblock cssfile %}
+{% block barContent %}
+<li class="nav-item active">
+    <a class="nav-link" href="manage_order">Order<span class="sr-only">(current)</span></a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" href="#">Menu</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" href="#">Store</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" href="#">Manager</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" href="#">Employee</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" href="#">Log Out</a>
+</li>
+{% endblock barContent %}
+{% block tabletitle%}Manage Orders{% endblock tabletitle%}
+{% block tablehead %}
+<th>#</th>
+<th>Order Address</th>
+<th>Order Store Id</th>
+<th>Price</th>
+<th>Dish Name</th>
+<th>Dish Num</th>
+<th>Status</th>
+<th></th>
+{% endblock tablehead %}
+{% block tablebody %}
+{% for order in orders %}
+<form method="POST">
+    {% csrf_token %}
+    <tr>
+        <td>{{ order.id }}</td>
+        <td>{{ order.address}}</td>
+        <td>{{ order.store}}</td>
+        <td>{{ order.price}}</td>
+        <td>
+            {% for menuorder in order.menuorder_set.all %}
+            <p>
+                {{ menuorder.menu.name}}
+            </p>
+            {% endfor %}
+        </td>
+        <td>
+            {% for menuorder in order.menuorder_set.all %}
+            <p>
+                {{ menuorder.num}}
+            </p>
+            {% endfor %}
+        </td>
+        <td>{{ order.status }}</td>
+        <td><button class="btn btn-primary" type="submit" name="fulfill" value="{{ order.id }}">Fulfill</button></td>
+    </tr>
+</form>
+{% endfor %}
+{% endblock tablebody %}

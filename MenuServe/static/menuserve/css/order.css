@@ -1,0 +1,38 @@
+body {
+  padding-top: 6rem;
+  padding-bottom: 3rem;
+  padding-left: 3rem;
+}
+
+/*.card-body{
+	height: 13rem;
+}
+
+.card-img{
+	height: 13rem;
+}*/
+.itemNum{
+	margin-left: 1rem; 
+}
+
+.itemNumShow{
+	width: 2rem;
+	text-align: center;
+}
+
+.place-order{
+	background-color: #f9f9f9;
+	height: 10rem;
+}
+
+#place-order-btn{
+	height: 3rem;
+	margin-left: 15rem;
+	margin-top: 3rem;
+}
+#order-price{
+	margin-left: 5rem; 
+	margin-top: 3rem; 
+}
+
+.lh-condensed { line-height: 1.25; }
