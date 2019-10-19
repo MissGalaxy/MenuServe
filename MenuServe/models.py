@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.auth.models import User
 
 class Menu(models.Model):
 	name=models.CharField(max_length=100)
@@ -23,8 +22,7 @@ class Employee(models.Model):
 class Store(models.Model):
 	name=models.CharField(max_length=100)
 	address=models.CharField(max_length=500)
-	manager=models.ManyToManyField(Manager)
-	employee=models.ManyToManyField(Employee)
+	staff=models.CharField(max_length=1000)
 
 class Order(models.Model):
 	address=models.CharField(max_length=500)
@@ -46,9 +44,3 @@ class Cart(models.Model):
 	photo=models.ImageField()
 	num=models.IntegerField()
 		
-
-
-		
-			
-
-

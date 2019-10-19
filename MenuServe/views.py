@@ -32,8 +32,6 @@ def signin(request):
 				# customer.save()
 				group=Group.objects.get(name='Customer')
 				user.groups.add(group)
-				for t in user.groups:
-					print(t.name)
 				result="regist succeed!"
 				return redirect('menu')
 			else:
@@ -81,7 +79,7 @@ def menu(request):
 				dish.save()	
 	return render(request,'menu.html',{"menus":menus})
 
-@login_required(login_url='login')
+# @login_required(login_url='login')
 def order(request):
 	items= Cart.objects.all()
 	stores= Store.objects.all()
@@ -178,56 +176,56 @@ def manage_menu(request):
 				dish.save()
 	return render(request,'manage_menu.html',{"menus":menus})
 
-def manage_store(request):
-	stores=Store.objects.all()
-	addRes=''
-	deleteRes=''
-	editRes=''
-	if 'deleteId' in request.POST:
-		id=request.POST.get('deleteId')
-		if str.isdigit(id):
-			try :
-				store =Store.objects.get(id=id)
-			except Store.DoesNotExist:
-				deleteRes='Delete Id does not exist'
-			else:
-				store.delete()
-	if 'addName' in request.POST and 'addAddress' in request.POST and 'addManager' in request.POST and 'addEmployee' in request.POST:
-		name=request.POST.get('addName')
-		address=request.POST.get('addAddress')
-		tmanagers=request.POST.get('addManager')
-		temployees=request.POST.get('addEmployee')
-		managers=tmanagers.split(',')
-		employees=temployees.split(',')
-		store=Store.objects.create(name=name,address=address)
-		for manager in managers:
-			store.manager.add(manager)
-		for employee in employees:
-			store.employee.add(employee)
-		store.save()
-	if 'editName' in request.POST and 'editAddress' in request.POST and 'editManager' in request.POST and 'editEmployee' in request.POST:
-		editId=request.POST.get('editId')
-		name=request.POST.get('editName')
-		address=request.POST.get('editAddress')
-		tmanagers=request.POST.get('editManager')
-		temployees=request.POST.get('editEmployee')
-		managers=tmanagers.split(',')
-		employees=temployees.split(',')
-		try:
-			store=Store.objects.get(id=editId)
-		except Store.DoesNotExist:
-			editRes='edit Id does not exist'
-		else:
-			store.name=name
-			store.address=address
-			store.manager.clear()
-			store.employee.clear()
-			for manager in managers:
-				store.manager.add(manager)
-			for employee in employees:
-				store.employee.add(employee)
-			store.save()
-	return render(request,'manage_store.html',{"stores":stores})
+# def manage_store(request):
+# 	stores=Store.objects.all()
+# 	addRes=''
+# 	deleteRes=''
+# 	editRes=''
+# 	if 'deleteId' in request.POST:
+# 		id=request.POST.get('deleteId')
+# 		if str.isdigit(id):
+# 			try :
+# 				store =Store.objects.get(id=id)
+# 			except Store.DoesNotExist:
+# 				deleteRes='Delete Id does not exist'
+# 			else:
+# 				store.delete()
+# 	if 'addName' in request.POST and 'addAddress' in request.POST and 'addManager' in request.POST and 'addEmployee' in request.POST:
+# 		name=request.POST.get('addName')
+# 		address=request.POST.get('addAddress')
+# 		tmanagers=request.POST.get('addManager')
+# 		temployees=request.POST.get('addEmployee')
+# 		managers=tmanagers.split(',')
+# 		employees=temployees.split(',')
+# 		store=Store.objects.create(name=name,address=address)
+# 		for manager in managers:
+# 			store.manager.add(manager)
+# 		for employee in employees:
+# 			store.employee.add(employee)
+# 		store.save()
+# 	if 'editName' in request.POST and 'editAddress' in request.POST and 'editManager' in request.POST and 'editEmployee' in request.POST:
+# 		editId=request.POST.get('editId')
+# 		name=request.POST.get('editName')
+# 		address=request.POST.get('editAddress')
+# 		tmanagers=request.POST.get('editManager')
+# 		temployees=request.POST.get('editEmployee')
+# 		managers=tmanagers.split(',')
+# 		employees=temployees.split(',')
+# 		try:
+# 			store=Store.objects.get(id=editId)
+# 		except Store.DoesNotExist:
+# 			editRes='edit Id does not exist'
+# 		else:
+# 			store.name=name
+# 			store.address=address
+# 			store.manager.clear()
+# 			store.employee.clear()
+# 			for manager in managers:
+# 				store.manager.add(manager)
+# 			for employee in employees:
+# 				store.employee.add(employee)
+# 			store.save()
+# 	return render(request,'manage_store.html',{"stores":stores})
 def manage_manager(request):
 	managers = Manager.objects.all()
 	deleteRes=''
@@ -309,6 +307,21 @@ def manage_order(request):
 		order.status=True
 		order.save()
 	return render(request,'manage_order.html',{"orders":orders})
+
+def manage_store(request):
+	stores=Store.objects.all()
+	if 'deleteId' in request.POST:
+		id=request.POST.get('deleteId')
+		if str.isdigit(id):
+			store =Store.objects.get(id=id)
+			if store:
+				store.delete()
+	if 'addName' in request.POST and 'addAddress' in request.POST:
+		name=request.POST.get('addName')
+		address=request.POST.get('addAddress')
+		store=Store.objects.create(name=name,address=address)
+		store.save()
+	return render(request,'manage_store.html',{"stores":stores})
 
 # def manage_role(request):
 # 	customers=Customer.objects.all()
@@ -398,7 +411,7 @@ def manage_role(request):
 		username_exists = User.objects.filter(username=username).exists()
 		group=Group.objects.get(name=groupName)
 		if username_exists and group:
-			user=User.objects.filter(username=username)
+			user=User.objects.get(username=username)
 			user.groups.clear()
 			user.groups.add(group)
 			user.save()
