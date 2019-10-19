@@ -22,6 +22,7 @@ class Employee(models.Model):
 class Store(models.Model):
 	name=models.CharField(max_length=100)
 	address=models.CharField(max_length=500)
+	#staff=models.ManyToManyField(User)
 	staff=models.CharField(max_length=1000)
 
 class Order(models.Model):
@@ -30,6 +31,7 @@ class Order(models.Model):
 	price=models.FloatField()
 	menus=models.ManyToManyField(Menu,through='MenuOrder')
 	status=models.BooleanField(blank=False)
+
 
 class MenuOrder(models.Model):
 	order = models.ForeignKey(Order,on_delete=models.CASCADE)
