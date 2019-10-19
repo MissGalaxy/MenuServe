@@ -26,80 +26,38 @@
 {% endblock barContent %}
 {% block main %}
 <div class="row">
-    <h2 class="col-md-10">Customers</h2>
+    <h2 class="col-md-10">Users</h2>
+    <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#changeGroup">Change</button>
 </div>
 <div class="table-responsive">
     <table class="table table-striped table-sm">
         <thead>
             <tr>
                 <th>username</th>
+                <th>first name</th>
+                <th>last name</th>
+                <th>group</th>
             </tr>
         </thead>
         <tbody>
-            {% for customer in customers %}
+            {% for user in users %}
             <tr>
-                <td>{{ customer.username }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
-<div class="row">
-    <h2 class="col-md-10">Managers</h2>
-    <div class="btn-group col-md-" role="group" aria-label="Basic example">
-        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#addManager">Add</button>
-        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#deleteManager">Delete</button>
-    </div>
-</div>
-<div class="table-responsive">
-    <table class="table table-striped table-sm">
-        <thead>
-            <tr>
-                <th>username</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for manager in managers %}
-            <tr>
-                <td>{{ manager.username }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
-<div class="row">
-    <h2 class="col-md-10">Employees</h2>
-    <div class="btn-group col-md-" role="group" aria-label="Basic example">
-        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#addEmployee">Add</button>
-        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#deleteEmployee">Delete</button>
-    </div>
-</div>
-<div class="table-responsive">
-    <table class="table table-striped table-sm">
-        <thead>
-            <tr>
-                <th>username</th>
-                <th>managers</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for employee in employees %}
-            <tr>
-                <td>{{ employee.username }}</td>
-                <td>{{ employee.manager.username}}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.first_name }}</td>
+                <td>{{ user.last_name }}</td>
+                <td>{{ user.groups.name }}</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
 {% endblock %}
-
-{% block extend%}
-<div class="modal fade" id="addManager" tabindex="-1" role="dialog" aria-labelledby="exampleaModalLabel" aria-hidden="true">
+{% block extend %}
+<div class="modal fade" id="changeGroup" tabindex="-1" role="dialog" aria-labelledby="exampleaModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalLabel">Add New Manager</h5>
+                <h5 class="modal-title" id="modalLabel">Change Group</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -108,94 +66,26 @@
                 {% csrf_token %}
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="addManager">Manager Name</label>
-                        <input type="text" class="form-control" name="addManager" placeholder="Manager Username">
+                        <label for="username">Username</label>
+                        <input type="text" class="form-control" name="username" placeholder="Username">
+                    </div>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="groupSelect">group</label>
+                        </div>
+                        <select class="custom-select" id="groupSelect" name="groupSelect">
+                            {% for group in groups%}
+                            <option value="{{group.name}}">{{group.name}}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Add</button>
+                    <button type="submit" class="btn btn-primary">Change</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
-
-<div class="modal fade" id="deleteManager" tabindex="-1" role="dialog" aria-labelledby="exampleaModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalLabel">Delete New Manager</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form enctype="multipart/form-data" method="POST">
-                {% csrf_token %}
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="deleteManager">Manager Name</label>
-                        <input type="text" class="form-control" name="deleteManager" placeholder="Manager Username">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Delete</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="addEmployee" tabindex="-1" role="dialog" aria-labelledby="exampleaModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalLabel">Add New Employee</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form enctype="multipart/form-data" method="POST">
-                {% csrf_token %}
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="addEmployee">Employee Name</label>
-                        <input type="text" class="form-control" name="addEmployee" placeholder="Employee Username">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Add</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="deleteEmployee" tabindex="-1" role="dialog" aria-labelledby="exampleaModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalLabel">Delete New Employee</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form enctype="multipart/form-data" method="POST">
-                {% csrf_token %}
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="deleteEmployee">Employee Name</label>
-                        <input type="text" class="form-control" name="deleteEmployee" placeholder="Employee Username">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Delete</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-{% endblock %}
+{% endblock%}

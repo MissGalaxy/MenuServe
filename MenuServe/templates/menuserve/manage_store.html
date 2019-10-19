@@ -32,7 +32,7 @@
     <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#deleteModal">Delete</button>
 </div>
 {% endblock %}
-<!-- {% block tablehead %}
+{% block tablehead %}
 <th>#</th>
 <th>Store Name</th>
 <th>Address</th>
@@ -47,18 +47,18 @@
     <td>{{ store.address }}</td>
     <td>
         {% for manager in store.manager.all %}
-        <span>{{ manager.username }}</span>
+        <span>{{ manager.id }}</span>
         {% endfor %}
     </td>
     <td>
         {% for employee in store.employee.all %}
-        <span>{{ employee.username }}</span>
+        <span>{{ employee.id }}</span>
         {% endfor %}
     </td>
 </tr>
 {% endfor %}
-{% endblock %} -->
-<!-- {% block modalId %}addModal{% endblock %}
+{% endblock %}
+{% block modalId %}addModal{% endblock %}
 {% block modalTitle%}Add New Store{% endblock modalTitle %}
 {% block modalBody%}
 <div class="form-group">
@@ -70,12 +70,12 @@
     <input type="text" class="form-control" name="addAddress" id="addAddress" placeholder="street1">
 </div>
 <div class="form-group">
-    <label for="addManager">Manager uesrname</label>
-    <input type="text" class="form-control" name="addManager" id="addManager" placeholder="uesrname">
+    <label for="addManager">Manager Id</label>
+    <input type="text" class="form-control" name="addManager" id="addManager" placeholder="1,2,3">
 </div>
 <div class="form-group">
-    <label for="addEmployee">Employee username</label>
-    <input type="text" class="form-control" name="addEmployee" id="addEmployee" placeholder="uesrname">
+    <label for="addEmployee">Employee Id</label>
+    <input type="text" class="form-control" name="addEmployee" id="addEmployee" placeholder="2,3,4">
 </div>
 {% endblock modalBody %}
 {% block modalbtn %}
@@ -97,12 +97,12 @@
     <input type="text" class="form-control" name="editAddress" id="editAddress" placeholder="street1">
 </div>
 <div class="form-group">
-    <label for="editManager">Manager username</label>
-    <input type="text" class="form-control" name="editManager" id="editManager" placeholder="username">
+    <label for="editManager">Manager Id</label>
+    <input type="text" class="form-control" name="editManager" id="editManager" placeholder="1,2,3">
 </div>
 <div class="form-group">
-    <label for="editEmployee">Employee username</label>
-    <input type="text" class="form-control" name="editEmployee" id="editEmployee" placeholder="username">
+    <label for="editEmployee">Employee Id</label>
+    <input type="text" class="form-control" name="editEmployee" id="editEmployee" placeholder="2,3,4">
 </div>
 {% endblock %}
 {% block modalbtn2 %}
@@ -116,4 +116,4 @@
 {% endblock %}
 {% block modalbtn3 %}
 <button type="submit" class="btn btn-primary">Delete</button>
-{% endblock %} -->
+{% endblock %}

@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 class Menu(models.Model):
 	name=models.CharField(max_length=100)
@@ -18,7 +19,6 @@ class Manager(models.Model):
 
 class Employee(models.Model):
 	username=models.CharField(max_length=100, primary_key=True)
-	manager=models.ManyToManyField(Manager)
 
 class Store(models.Model):
 	name=models.CharField(max_length=100)

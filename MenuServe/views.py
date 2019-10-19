@@ -9,6 +9,11 @@ from django.contrib.auth import login
 from django.contrib.auth import logout
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.models import Group
+
+customerG=Group.objects.get_or_create(name='Customer')
+employeeG=Group.objects.get_or_create(name='Employee')
+managerG=Group.objects.get_or_create(name='Manager')
 
 def signin(request):
 	result=""
@@ -22,9 +27,13 @@ def signin(request):
 			lastName = signinForm.cleaned_data.get("lastname")
 			username_exists = User.objects.filter(username=username).exists()
 			if not username_exists:
-				User.objects.create_user(username=username,password=password,first_name=firstName,last_name=lastName)
-				customer=Customer(username=username)
-				customer.save()
+				user=User.objects.create_user(username=username,password=password,first_name=firstName,last_name=lastName)
+				# customer=Customer(username=username)
+				# customer.save()
+				group=Group.objects.get(name='Customer')
+				user.groups.add(group)
+				for t in user.groups:
+					print(t.name)
 				result="regist succeed!"
 				return redirect('menu')
 			else:
@@ -301,83 +310,96 @@ def manage_order(request):
 		order.save()
 	return render(request,'manage_order.html',{"orders":orders})
 
-def manage_role(request):
-	customers=Customer.objects.all()
-	managers=Manager.objects.all()
-	employees=Employee.objects.all()
-	addManagerRes=""
-	deleteManagerRes=""
-	addEmployeeRes=""
-	deleteEmployeeRes=""
-	if 'addManager' in request.POST:
-		username=request.POST.get('addManager')
-		username_exists = User.objects.filter(username=username).exists()
-		if username_exists:
-			manager_exists = Manager.objects.filter(username=username).exists()
-			if not manager_exists:
-				manager=Manager(username=username)
-				manager.save()
-			customer_exists = Customer.objects.filter(username=username).exists()
-			if customer_exists:
-				customer=Customer.objects.filter(username=username)
-				customer.delete()
-			employee_exists = Employee.objects.filter(username=username).exists()
-			if employee_exists:
-				employee=Employee.objects.filter(username=username)
-				employee.delete()
-			addManagerRes="Add Manager Succeed!"
-		else:
-			addManagerRes="Add Manager Failed! User doesn't exist"
-	if 'deleteManager' in request.POST:
-		username=request.POST.get('deleteManager')
-		username_exists = User.objects.filter(username=username).exists()
-		if username_exists:
-			manager_exists = Manager.objects.filter(username=username).exists()
-			if manager_exists:
-				manager = Manager.objects.filter(username=username)
-				manager.delete()
-			customer_exists=Customer.objects.filter(username=username)
-			if not customer_exists:
-				customer=Customer(username=username)
-				customer.save()
-			deleteManagerRes="Delete Manager succeed!"
-		else:
-			deleteManagerRes="Delete Manager Failed! User doesn't exist"
-	if 'addEmployee' in request.POST:
-		username=request.POST.get('addEmployee')
-		username_exists = User.objects.filter(username=username).exists()
-		if username_exists:
-			employee_exists = Employee.objects.filter(username=username).exists()
-			if not employee_exists:
-				employee=Employee(username=username)
-				employee.save()
-			customer_exists = Customer.objects.filter(username=username).exists()
-			if customer_exists:
-				customer=Customer.objects.filter(username=username)
-				customer.delete()
-			manager_exists = Manager.objects.filter(username=username).exists()
-			if manager_exists:
-				manager=Manager.objects.filter(username=username)
-				manager.delete()
-			addEmployeeRes="Add Employee Succeed!"
-		else:
-			addEmployeeRes="Add Employee Failed! User doesn't exist"
-	if 'deleteEmployee' in request.POST:
-		username=request.POST.get('deleteEmployee')
-		username_exists = User.objects.filter(username=username).exists()
-		if username_exists:
-			employee_exists = Employee.objects.filter(username=username).exists()
-			if employee_exists:
-				employee = Employee.objects.filter(username=username)
-				employee.delete()
-			customer_exists=Customer.objects.filter(username=username)
-			if not customer_exists:
-				customer=Customer(username=username)
-				customer.save()
-			deleteEmployeeRes="Delete Employee succeed!"
-		else:
-			deleteEmployeeRes="Delete Employee Failed! User doesn't exist"
+# def manage_role(request):
+# 	customers=Customer.objects.all()
+# 	managers=Manager.objects.all()
+# 	employees=Employee.objects.all()
+# 	addManagerRes=""
+# 	deleteManagerRes=""
+# 	addEmployeeRes=""
+# 	deleteEmployeeRes=""
+# 	if 'addManager' in request.POST:
+# 		username=request.POST.get('addManager')
+# 		username_exists = User.objects.filter(username=username).exists()
+# 		if username_exists:
+# 			manager_exists = Manager.objects.filter(username=username).exists()
+# 			if not manager_exists:
+# 				manager=Manager(username=username)
+# 				manager.save()
+# 			customer_exists = Customer.objects.filter(username=username).exists()
+# 			if customer_exists:
+# 				customer=Customer.objects.filter(username=username)
+# 				customer.delete()
+# 			employee_exists = Employee.objects.filter(username=username).exists()
+# 			if employee_exists:
+# 				employee=Employee.objects.filter(username=username)
+# 				employee.delete()
+# 			addManagerRes="Add Manager Succeed!"
+# 		else:
+# 			addManagerRes="Add Manager Failed! User doesn't exist"
+# 	if 'deleteManager' in request.POST:
+# 		username=request.POST.get('deleteManager')
+# 		username_exists = User.objects.filter(username=username).exists()
+# 		if username_exists:
+# 			manager_exists = Manager.objects.filter(username=username).exists()
+# 			if manager_exists:
+# 				manager = Manager.objects.filter(username=username)
+# 				manager.delete()
+# 			customer_exists=Customer.objects.filter(username=username)
+# 			if not customer_exists:
+# 				customer=Customer(username=username)
+# 				customer.save()
+# 			deleteManagerRes="Delete Manager succeed!"
+# 		else:
+# 			deleteManagerRes="Delete Manager Failed! User doesn't exist"
+# 	if 'addEmployee' in request.POST:
+# 		username=request.POST.get('addEmployee')
+# 		username_exists = User.objects.filter(username=username).exists()
+# 		if username_exists:
+# 			employee_exists = Employee.objects.filter(username=username).exists()
+# 			if not employee_exists:
+# 				employee=Employee(username=username)
+# 				employee.save()
+# 			customer_exists = Customer.objects.filter(username=username).exists()
+# 			if customer_exists:
+# 				customer=Customer.objects.filter(username=username)
+# 				customer.delete()
+# 			manager_exists = Manager.objects.filter(username=username).exists()
+# 			if manager_exists:
+# 				manager=Manager.objects.filter(username=username)
+# 				manager.delete()
+# 			addEmployeeRes="Add Employee Succeed!"
+# 		else:
+# 			addEmployeeRes="Add Employee Failed! User doesn't exist"
+# 	if 'deleteEmployee' in request.POST:
+# 		username=request.POST.get('deleteEmployee')
+# 		username_exists = User.objects.filter(username=username).exists()
+# 		if username_exists:
+# 			employee_exists = Employee.objects.filter(username=username).exists()
+# 			if employee_exists:
+# 				employee = Employee.objects.filter(username=username)
+# 				employee.delete()
+# 			customer_exists=Customer.objects.filter(username=username)
+# 			if not customer_exists:
+# 				customer=Customer(username=username)
+# 				customer.save()
+# 			deleteEmployeeRes="Delete Employee succeed!"
+# 		else:
+# 			deleteEmployeeRes="Delete Employee Failed! User doesn't exist"
 	
-	return render(request,'manage_role.html',{"customers":customers,"managers":managers,"employees":employees,'addManagerRes':addManagerRes,'deleteManagerRes':deleteManagerRes})
+# 	return render(request,'manage_role.html',{"customers":customers,"managers":managers,"employees":employees,'addManagerRes':addManagerRes,'deleteManagerRes':deleteManagerRes})
 
-	
+def manage_role(request):
+	users=User.objects.all()
+	groups=Group.objects.all()
+	if 'username' in request.POST and 'groupSelect' in request.POST:
+		username=request.POST.get('username')
+		groupName=request.POST.get('groupSelect')
+		username_exists = User.objects.filter(username=username).exists()
+		group=Group.objects.get(name=groupName)
+		if username_exists and group:
+			user=User.objects.filter(username=username)
+			user.groups.clear()
+			user.groups.add(group)
+			user.save()
+	return render(request,'manage_role.html',{"users":users,"groups":groups})
