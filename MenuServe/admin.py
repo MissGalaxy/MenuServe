@@ -1,5 +1,5 @@
 from django.contrib import admin
-from MenuServe.models import Menu,Store,Manager,Employee,MenuOrder,Order,Cart
+from MenuServe.models import Menu,Store,Manager,Employee,MenuOrder,Order,Cart,Customer
 
  
 # Register your models here.
@@ -10,4 +10,5 @@ admin.site.register(Employee)
 admin.site.register(Order)
 admin.site.register(MenuOrder)
 admin.site.register(Cart)
+admin.site.register(Customer)
 

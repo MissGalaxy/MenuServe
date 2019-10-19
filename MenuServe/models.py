@@ -1,7 +1,5 @@
 from django.db import models
 
-# Create your models here.
-
 class Menu(models.Model):
 	name=models.CharField(max_length=100)
 	price=models.FloatField()
@@ -12,12 +10,15 @@ class Menu(models.Model):
 		verbose_name=("Menu")
 		verbose_name_plural=("Menus")
 
+class Customer(models.Model):
+	username=models.CharField(max_length=100)
+
 class Manager(models.Model):
-	name=models.CharField(max_length=100)
+	username=models.CharField(max_length=100)
 
 class Employee(models.Model):
-	name=models.CharField(max_length=100)
-	manager=models.ForeignKey(Manager, on_delete=models.CASCADE,default='')
+	username=models.CharField(max_length=100)
+	manager=models.ManyToManyField(Manager)
 
 class Store(models.Model):
 	name=models.CharField(max_length=100)

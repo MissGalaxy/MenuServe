@@ -1,7 +1,60 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.core.files.storage import FileSystemStorage
-from .models import Menu,Manager,Employee,Store,Order,MenuOrder,Cart
+from .models import Menu,Customer,Manager,Employee,Store,Order,MenuOrder,Cart
+from django.contrib.auth.models import User
+from .forms import *
+from django.contrib.auth import authenticate
+from django.contrib.auth import login
+from django.contrib.auth import logout
+from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required, permission_required
+
+def signin(request):
+	result=""
+	signinForm=SignInForm()
+	if request.method == "POST":
+		signinForm=SignInForm(request.POST)
+		if signinForm.is_valid():
+			username = signinForm.cleaned_data.get("username")
+			password = signinForm.cleaned_data.get("password1")
+			firstName = signinForm.cleaned_data.get("firstname")
+			lastName = signinForm.cleaned_data.get("lastname")
+			username_exists = User.objects.filter(username=username).exists()
+			if not username_exists:
+				User.objects.create_user(username=username,password=password,first_name=firstName,last_name=lastName)
+				result="regist succeed!"
+				customer=Customer(username=username)
+				customer.save()
+				return redirect('menu')
+			else:
+				result="username exist!"
+	return render(request,'signin.html',{"result":result,"form":signinForm})
+
+def loginView(request):
+	result=""
+	loginForm=LogInForm()
+	if request.method == "POST":
+		loginForm=LogInForm(request.POST)
+		if loginForm.is_valid():
+			username = loginForm.cleaned_data.get("username")
+			password = loginForm.cleaned_data.get("password")
+			user = authenticate(request,username=username,password=password)
+			if user and user.is_active:
+				login(request,user)
+				result="log in succeed"
+				request.session.set_expiry(0)
+				return redirect('menu')
+
+			elif user and not user.is_active:
+				result="user is not active"
+			else:
+				result="username or password is wrong"
+	return render(request,'login.html',{"result":result,"form":loginForm})
+
+def logoutView(request):
+    logout(request)
+    return redirect('menu')
 
 def menu(request):
 	menus = Menu.objects.all()
@@ -18,6 +71,8 @@ def menu(request):
 				dish=Cart(menuId=menu.id,name=menu.name,price=menu.price,description=menu.description, photo=menu.photo, num=1)
 				dish.save()	
 	return render(request,'menu.html',{"menus":menus})
+
+@login_required(login_url='login')
 def order(request):
 	items= Cart.objects.all()
 	stores= Store.objects.all()
@@ -245,4 +300,48 @@ def manage_order(request):
 		order.status=True
 		order.save()
 	return render(request,'manage_order.html',{"orders":orders})
+
+def manage_role(request):
+	customers=Customer.objects.all()
+	managers=Manager.objects.all()
+	employees=Employee.objects.all()
+	addManagerRes=""
+	deleteManagerRes=""
+	if 'addManager' in request.POST:
+		username=request.POST.get('addManager')
+		username_exists = User.objects.filter(username=username).exists()
+		if username_exists:
+			manager_exists = Manager.objects.filter(username=username).exists()
+			if not manager_exists:
+				manager=Manager(username=username)
+				manager.save()
+			customer_exists = Customer.objects.filter(username=username).exists()
+			if customer_exists:
+				customer=Customer.objects.filter(username=username)
+				customer.delete()
+			employee_exists = Employee.objects.filter(username=username).exists()
+			if employee_exists:
+				employee=Employee.objects.filter(username=username)
+				employee.delete()
+			addManagerRes="Add Manager Succeed!"
+		else:
+			addManagerRes="Add Manager Failed! User doesn't exist"
+	if 'deleteManager' in request.POST:
+		username=request.POST.get('deleteManager')
+		username_exists = User.objects.filter(username=username).exists()
+		if username_exists:
+			manager_exists = Manager.objects.filter(username=username).exists()
+			if manager_exists:
+				manager = Manager.objects.filter(username=username)
+				manager.delete()
+			customer_exists=Customer.objects.filter(username=username)
+			if not customer_exists:
+				customer=Customer(username=username)
+				customer.save()
+			deleteManagerRes="Delete Manager succeed!"
+		else:
+			deleteManagerRes="Delete Manager Failed! User doesn't exist"
+	
+	return render(request,'manage_role.html',{"customers":customers,"managers":managers,"employees":employees,'addManagerRes':addManagerRes,'deleteManagerRes':deleteManagerRes})
+
 	
