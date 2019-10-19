@@ -11,13 +11,13 @@ class Menu(models.Model):
 		verbose_name_plural=("Menus")
 
 class Customer(models.Model):
-	username=models.CharField(max_length=100)
+	username=models.CharField(max_length=100, primary_key=True)
 
 class Manager(models.Model):
-	username=models.CharField(max_length=100)
+	username=models.CharField(max_length=100, primary_key=True)
 
 class Employee(models.Model):
-	username=models.CharField(max_length=100)
+	username=models.CharField(max_length=100, primary_key=True)
 	manager=models.ManyToManyField(Manager)
 
 class Store(models.Model):
