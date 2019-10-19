@@ -47,12 +47,12 @@
     <td>{{ store.address }}</td>
     <td>
         {% for manager in store.manager.all %}
-        <span>{{ manager.id }}</span>
+        <span>{{ manager.username }}</span>
         {% endfor %}
     </td>
     <td>
         {% for employee in store.employee.all %}
-        <span>{{ employee.id }}</span>
+        <span>{{ employee.username }}</span>
         {% endfor %}
     </td>
 </tr>
