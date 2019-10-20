@@ -102,6 +102,13 @@ def order(request):
 	totalPrice=0
 	for item in items:
 		totalPrice+=item.num*item.price
+
+	orders={}
+	username=request.user.username
+	username_exists=User.objects.filter(username=username)
+	if username_exists:
+		orders=Order.objects.filter(customer=username)
+
 	if 'removeFromCart' in request.POST:
 		itemId=request.POST.get('removeFromCart')
 		try:
@@ -131,17 +138,17 @@ def order(request):
 			t=item.num
 			item.num=t+1
 			item.save()
-	if 'placeOrder' in request.POST:
+	if 'placeOrder' in request.POST and username:
 		address=request.POST.get('orderAddress')
 		store=request.POST.get('chooseStore')
-		order=Order.objects.create(address=address,store=store,price=totalPrice,status=False)
+		order=Order.objects.create(address=address,store=store,price=totalPrice,status=False,customer=username)
 		for item in items:
 			menu=Menu.objects.get(id=item.menuId)
 			menuorder=MenuOrder(order=order,menu=menu,num=item.num)
 			menuorder.save()
 		order.save()
 		Cart.objects.all().delete()
-	return render(request,'order.html',{"items":items,"totalPrice":totalPrice,"stores":stores})
+	return render(request,'order.html',{"items":items,"totalPrice":totalPrice,"stores":stores,"orders":orders})
 
 # @permission_required('Menu.view_menu')
 def manage_menu(request):
