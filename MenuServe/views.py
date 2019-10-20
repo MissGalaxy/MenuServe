@@ -153,7 +153,9 @@ def order(request):
 # @permission_required('Menu.view_menu')
 def manage_menu(request):
 	currgroup=request.user.groups.all()
-	if not str(currgroup[0]) == "Manager":
+	if len(currgroup)==0:
+		return redirect('menu')
+	else if not str(currgroup[0]) == "Manager":
 		return redirect('menu')
 
 	menus = Menu.objects.all()
@@ -329,7 +331,9 @@ def manage_employee(request):
 # @permission_required('Order.view_order')
 def manage_order(request):
 	currgroup=request.user.groups.all()
-	if not (str(currgroup[0]) == "Manager" or str(currgroup[0]) == "Employee"):
+	if len(currgroup)==0:
+		return redirect('menu')
+	else if not (str(currgroup[0]) == "Manager" or str(currgroup[0]) == "Employee"):
 		return redirect('menu')
 
 	orders = Order.objects.all()
@@ -343,7 +347,9 @@ def manage_order(request):
 # @permission_required('Store.view_store')
 def manage_store(request):
 	currgroup=request.user.groups.all()
-	if not str(currgroup[0]) == "Manager":
+	if len(currgroup)==0:
+		return redirect('menu')
+	else if not str(currgroup[0]) == "Manager":
 		return redirect('menu')
 	stores=Store.objects.all()
 	if 'deleteId' in request.POST:
@@ -450,7 +456,9 @@ def manage_store(request):
 # @permission_required('User.view_user',login_url='login')
 def manage_role(request):
 	currgroup=request.user.groups.all()
-	if not str(currgroup[0]) == "Manager":
+	if len(currgroup)==0:
+		return redirect('menu')
+	else if not str(currgroup[0]) == "Manager":
 		return redirect('menu')
 
 	users=User.objects.all()
