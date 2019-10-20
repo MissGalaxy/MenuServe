@@ -31,6 +31,7 @@ class Order(models.Model):
 	price=models.FloatField()
 	menus=models.ManyToManyField(Menu,through='MenuOrder')
 	status=models.BooleanField(blank=False)
+	#customer=models.CharField(max_length=100)
 
 
 class MenuOrder(models.Model):

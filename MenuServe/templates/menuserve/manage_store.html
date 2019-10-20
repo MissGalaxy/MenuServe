@@ -29,6 +29,7 @@
 <div class="btn-group col-md-2" role="group" aria-label="Basic example">
     <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#addStore">Add</button>
     <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#deleteStore">Delete</button>
+    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#AssignStaff">Assign</button>
 </div>
 {% endblock %}
 
@@ -66,6 +67,20 @@
 {% block modalbtn %}
 <button type="submit" class="btn btn-primary">Add</button>
 {% endblock modalbtn %}
+
+{% block modalId2 %}AssignStaff{% endblock %}
+{% block modalTitle2%}Assgin Staff{% endblock%}
+{% block modalBody2%}
+<div class="form-group">
+    <label for="UserName">Username</label>
+    <input type="text" class="form-control" name="UserName" id="UserName" placeholder="username">
+    <label for="AssginID">Store ID</label>
+    <input type="text" class="form-control" name="AssginID" id="AssginID" placeholder="Store Id">
+</div>
+{% endblock%}
+{% block modalbtn2 %}
+<button type="submit" class="btn btn-primary">Add</button>
+{% endblock%}
 
 {% block modalId3 %}deleteStore{% endblock %}
 {% block modalTitle3%}Delete Store{% endblock %}

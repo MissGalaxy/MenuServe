@@ -2,18 +2,31 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.core.files.storage import FileSystemStorage
 from .models import Menu,Customer,Manager,Employee,Store,Order,MenuOrder,Cart
-from django.contrib.auth.models import User
 from .forms import *
 from django.contrib.auth import authenticate
 from django.contrib.auth import login
 from django.contrib.auth import logout
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required, permission_required
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import User,Group,Permission,ContentType
 
-customerG=Group.objects.get_or_create(name='Customer')
-employeeG=Group.objects.get_or_create(name='Employee')
-managerG=Group.objects.get_or_create(name='Manager')
+customerG,flag1=Group.objects.get_or_create(name='Customer')
+employeeG,flag2=Group.objects.get_or_create(name='Employee')
+managerG,flag3=Group.objects.get_or_create(name='Manager')
+
+content_type = ContentType.objects.get_for_model(Store)
+permission = Permission.objects.filter(content_type=content_type)
+managerG.permissions.set(permission)
+content_type2 = ContentType.objects.get_for_model(User)
+permission2 = Permission.objects.filter(content_type=content_type2)
+managerG.permissions.set(permission2)
+content_type3 = ContentType.objects.get_for_model(Menu)
+permission3 = Permission.objects.filter(content_type=content_type3)
+managerG.permissions.set(permission3)
+content_type4 = ContentType.objects.get_for_model(Order)
+permission4 = Permission.objects.filter(content_type=content_type4)
+managerG.permissions.set(permission4)
+employeeG.permissions.set(permission4)
 
 def signin(request):
 	result=""
@@ -79,7 +92,7 @@ def menu(request):
 				dish.save()	
 	return render(request,'menu.html',{"menus":menus})
 
-# @login_required(login_url='login')
+@login_required(login_url='login')
 def order(request):
 	items= Cart.objects.all()
 	stores= Store.objects.all()
@@ -129,7 +142,13 @@ def order(request):
 		order.save()
 		Cart.objects.all().delete()
 	return render(request,'order.html',{"items":items,"totalPrice":totalPrice,"stores":stores})
+
+# @permission_required('Menu.view_menu')
 def manage_menu(request):
+	currgroup=request.user.groups.all()
+	if not str(currgroup[0]) == "Manager":
+		return redirect('menu')
+
 	menus = Menu.objects.all()
 	deleteRes=''
 	editRes=''
@@ -299,7 +318,13 @@ def manage_employee(request):
 						employee.manager=manager
 						employee.save()
 	return render(request,'manage_employee.html',{"employees":employees})
+
+# @permission_required('Order.view_order')
 def manage_order(request):
+	currgroup=request.user.groups.all()
+	if not (str(currgroup[0]) == "Manager" or str(currgroup[0]) == "Employee"):
+		return redirect('menu')
+
 	orders = Order.objects.all()
 	if request.method == "POST":
 		orderId=request.POST.get('fulfill')
@@ -308,12 +333,16 @@ def manage_order(request):
 		order.save()
 	return render(request,'manage_order.html',{"orders":orders})
 
+# @permission_required('Store.view_store')
 def manage_store(request):
+	currgroup=request.user.groups.all()
+	if not str(currgroup[0]) == "Manager":
+		return redirect('menu')
 	stores=Store.objects.all()
 	if 'deleteId' in request.POST:
-		id=request.POST.get('deleteId')
-		if str.isdigit(id):
-			store =Store.objects.get(id=id)
+		storeId=request.POST.get('deleteId')
+		if str.isdigit(storeId):
+			store =Store.objects.get(id=storeId)
 			if store:
 				store.delete()
 	if 'addName' in request.POST and 'addAddress' in request.POST:
@@ -321,6 +350,15 @@ def manage_store(request):
 		address=request.POST.get('addAddress')
 		store=Store.objects.create(name=name,address=address)
 		store.save()
+	if 'UserName' in request.POST and 'AssginID' in request.POST :
+		username=request.POST.get('UserName')
+		storeId=request.POST.get('AssginID')
+		username_exists = User.objects.filter(username=username).exists()
+		store=Store.objects.get(id=storeId)
+		if username_exists and store:
+			store.staff=store.staff+","+username
+			store.save()
+
 	return render(request,'manage_store.html',{"stores":stores})
 
 # def manage_role(request):
@@ -402,7 +440,12 @@ def manage_store(request):
 	
 # 	return render(request,'manage_role.html',{"customers":customers,"managers":managers,"employees":employees,'addManagerRes':addManagerRes,'deleteManagerRes':deleteManagerRes})
 
+# @permission_required('User.view_user',login_url='login')
 def manage_role(request):
+	currgroup=request.user.groups.all()
+	if not str(currgroup[0]) == "Manager":
+		return redirect('menu')
+
 	users=User.objects.all()
 	groups=Group.objects.all()
 	if 'username' in request.POST and 'groupSelect' in request.POST:
