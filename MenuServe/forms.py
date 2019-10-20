@@ -30,11 +30,11 @@ class SignInForm(Form):
     password1 = fields.CharField(
         required=True,
         min_length=6,
-        max_length=20,
+        max_length=30,
         error_messages={
             "required":"password can't be empty",
             "min_length": "password can't be less than 6",
-            "max_length": "password can't be more than 20"
+            "max_length": "password can't be more than 30"
         }
     )
     password2 = fields.CharField(required=False)
