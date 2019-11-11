@@ -1,0 +1,3 @@
+Django
+WhiteNoise
+psycopg2

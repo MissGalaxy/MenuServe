@@ -1,0 +1,91 @@
+{% extends "navBar.html" %}
+{% load staticfiles %}
+{% block title %}MANAGE EMPLOYEE{% endblock %}
+{% block cssfile %}
+<link rel="stylesheet" type="text/css" href="{% static 'menuserve/css/manage_employee.css' %}">
+{% endblock cssfile %}
+{% block barContent %}
+<li class="nav-item">
+    <a class="nav-link" href="#">Order</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" href="#">Menu</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" href="#">Store</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" href="#">Manager</a>
+</li>
+<li class="nav-item active">
+    <a class="nav-link" href="#">Employee<span class="sr-only">(current)</span></a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" href="#">Log Out</a>
+</li>
+{% endblock barContent %}
+{% block tabletitle%}Employee Management{% endblock tabletitle%}
+{% block btngroup %}
+<div class="btn-group col-md-2" role="group" aria-label="Basic example">
+    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#addModal">Add</button>
+    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#editModal">Edit</button>
+    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#deleteModal">Delete</button>
+</div>
+{% endblock %}
+{% block tablehead %}
+<th>#</th>
+<th>Employee Name</th>
+<th>Manager ID</th>
+{% endblock tablehead %}
+{% block tablebody %}
+{% for employee in employees %}
+<tr>
+    <td>{{ employee.id }}</td>
+    <td>{{ employee.name }}</td>
+    <td>{{ employee.manager.id}}</td>
+</tr>
+{% endfor %}
+{% endblock %}
+{% block modalId %}addModal{% endblock %}
+{% block modalTitle%}Add New Employee{% endblock modalTitle %}
+{% block modalBody%}
+<div class="form-group">
+    <label for="addName">Employee Name</label>
+    <input type="text" class="form-control" name="addName" id="addName" placeholder="Employee1">
+</div>
+<div class="form-group">
+    <label for="addManagerId">Manager Id</label>
+    <input type="text" class="form-control" name="addManagerId" id="addManagerId" placeholder="1">
+</div>
+{% endblock modalBody %}
+{% block modalbtn %}
+<button type="submit" class="btn btn-primary">Add</button>
+{% endblock modalbtn %}
+{% block modalId2 %}editModal{% endblock %}
+{% block modalTitle2%}Edit Employee{% endblock %}
+{% block modalBody2%}
+<div class="form-group">
+    <label for="editId">Employee ID</label>
+    <input type="text" class="form-control" name="editId" id="editId" placeholder="1">
+</div>
+<div class="form-group">
+    <label for="editName">Employee Name</label>
+    <input type="text" class="form-control" name="editName" id="editName" placeholder="Employee1">
+</div>
+<div class="form-group">
+    <label for="editId">Manager ID</label>
+    <input type="text" class="form-control" name="editManagerId" id="editManagerId" placeholder="1">
+</div>
+{% endblock %}
+{% block modalbtn2 %}
+<button type="submit" class="btn btn-primary">Edit</button>
+{% endblock %}
+{% block modalId3 %}deleteModal{% endblock %}
+{% block modalTitle3%}Delete Employee{% endblock %}
+{% block modalBody3 %}
+<h5>Please input ID to delete Employee</h5>
+<input type="text" class="form-control" name="deleteId" id="deleteId" placeholder="Employee ID">
+{% endblock %}
+{% block modalbtn3 %}
+<button type="submit" class="btn btn-primary">Delete</button>
+{% endblock %}
