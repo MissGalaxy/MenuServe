@@ -61,3 +61,8 @@ steps:
     testResultsFiles: "**/TEST-*.xml"
     testRunTitle: 'Python $(PYTHON_VERSION)'
   condition: succeededOrFailed()
+
+- script: |
+    git checkout master
+    git push https://yaolu:$(GITPASSWORD)@yaolumenu.scm.azurewebsites.net:443/MenuServe.git master:master
+  displayName: 'Deployment'
