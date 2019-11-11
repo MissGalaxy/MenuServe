@@ -64,5 +64,6 @@ steps:
 
 - script: |
     git checkout master
+    git pull https://yaolu:$(GITPASSWORD)@yaolumenu.scm.azurewebsites.net/yaolumenu.git master
     git push https://yaolu:$(GITPASSWORD)@yaolumenu.scm.azurewebsites.net/yaolumenu.git master:master
   displayName: 'Deployment'
