@@ -10,23 +10,23 @@ from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import User,Group,Permission,ContentType
 
-customerG,flag1=Group.objects.get_or_create(name='Customer')
-employeeG,flag2=Group.objects.get_or_create(name='Employee')
-managerG,flag3=Group.objects.get_or_create(name='Manager')
+# customerG,flag1=Group.objects.get_or_create(name='Customer')
+# employeeG,flag2=Group.objects.get_or_create(name='Employee')
+# managerG,flag3=Group.objects.get_or_create(name='Manager')
 
-content_type = ContentType.objects.get_for_model(Store)
-permission = Permission.objects.filter(content_type=content_type)
-managerG.permissions.set(permission)
-content_type2 = ContentType.objects.get_for_model(User)
-permission2 = Permission.objects.filter(content_type=content_type2)
-managerG.permissions.set(permission2)
-content_type3 = ContentType.objects.get_for_model(Menu)
-permission3 = Permission.objects.filter(content_type=content_type3)
-managerG.permissions.set(permission3)
-content_type4 = ContentType.objects.get_for_model(Order)
-permission4 = Permission.objects.filter(content_type=content_type4)
-managerG.permissions.set(permission4)
-employeeG.permissions.set(permission4)
+# content_type = ContentType.objects.get_for_model(Store)
+# permission = Permission.objects.filter(content_type=content_type)
+# managerG.permissions.set(permission)
+# content_type2 = ContentType.objects.get_for_model(User)
+# permission2 = Permission.objects.filter(content_type=content_type2)
+# managerG.permissions.set(permission2)
+# content_type3 = ContentType.objects.get_for_model(Menu)
+# permission3 = Permission.objects.filter(content_type=content_type3)
+# managerG.permissions.set(permission3)
+# content_type4 = ContentType.objects.get_for_model(Order)
+# permission4 = Permission.objects.filter(content_type=content_type4)
+# managerG.permissions.set(permission4)
+# employeeG.permissions.set(permission4)
 
 def signin(request):
 	result=""
