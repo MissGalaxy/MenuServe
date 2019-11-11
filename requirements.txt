@@ -1,3 +1,4 @@
 Django
 WhiteNoise
 psycopg2
+Pillow
